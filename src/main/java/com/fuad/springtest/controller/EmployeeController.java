@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -34,20 +33,33 @@ public class EmployeeController {
 
     @PostMapping("/employees")
     public ResponseEntity<?> saveEmployee(@RequestBody Employee employee){
-        URI uri = URI.create()
-        return ResponseEntity.created(service.saveEmployee(employee).getId());
+        return ResponseEntity.ok(service.saveEmployee(employee).getId());
     }
 
     @PutMapping("/employees/{id}")
-    public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
+    public ResponseEntity<?> updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
         employee.setId(id);
-        return service.updateEmploye(employee);
+        return ResponseEntity.ok(service.updateEmploye(employee));
     }
 
     @DeleteMapping("/employees")
-    public void deleteEmployee(@RequestParam("id") Long id){
+    public ResponseEntity<?> deleteEmployee(@RequestParam("id") Long id){
         service.deleteEmployee(id);
+        return ResponseEntity.ok("delete success");
     }
 
+    @GetMapping("/employees/findByName")
+    public ResponseEntity<?> getEmplByName(@RequestParam String name){
+        return ResponseEntity.ok(service.getEmployeesByName(name));
+    }
 
+    @GetMapping("/employees/findByNameAndLocation")
+    public ResponseEntity<?> getEmplByNameAndLocation(@RequestParam String name, @RequestParam String location){
+        return ResponseEntity.ok(service.getEmployeesByNameAndLocation(name, location));
+    }
+
+    @GetMapping("/employees/findByNameKey")
+    public ResponseEntity<?> getEmplByNameKey(@RequestParam String name){
+        return ResponseEntity.ok(service.getEmployeesByNameKeyword(name));
+    }
 }
