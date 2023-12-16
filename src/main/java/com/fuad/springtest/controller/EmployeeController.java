@@ -1,6 +1,10 @@
 package com.fuad.springtest.controller;
 
+import com.fuad.springtest.model.Department;
 import com.fuad.springtest.model.Employee;
+import com.fuad.springtest.repository.DepartmentRepository;
+import com.fuad.springtest.repository.EmployeeRepository;
+import com.fuad.springtest.request.EmployeeRequest;
 import com.fuad.springtest.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +18,11 @@ public class EmployeeController {
 
     @Autowired
     private EmployeeService service;
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private EmployeeRepository repository;
 
     @Value("${app.name}")
     private String appName;
@@ -32,8 +41,15 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public ResponseEntity<?> saveEmployee(@RequestBody Employee employee){
-        return ResponseEntity.ok(service.saveEmployee(employee).getId());
+    public ResponseEntity<?> saveEmployee(@RequestBody EmployeeRequest employee){
+        Department dep = new Department();
+        dep.setName(employee.getDepartment().toString());
+        departmentRepository.save(dep);
+
+        Employee employee1 = new Employee(employee);
+        employee1.setDepartment(dep);
+
+        return ResponseEntity.ok(service.saveEmployee(employee1));
     }
 
     @PutMapping("/employees/{id}")
@@ -61,5 +77,21 @@ public class EmployeeController {
     @GetMapping("/employees/findByNameKey")
     public ResponseEntity<?> getEmplByNameKey(@RequestParam String name){
         return ResponseEntity.ok(service.getEmployeesByNameKeyword(name));
+    }
+
+    @GetMapping("/employees/{name}/{location}")
+    public ResponseEntity<?> getEmployeesByNameKey(@PathVariable String name, @PathVariable String location){
+        return ResponseEntity.ok(service.getEmployeeByNameOrLocation(name,location));
+    }
+
+    @DeleteMapping("/employees/{name}")
+    public ResponseEntity<?> deleteByName(@PathVariable String name){
+        return ResponseEntity.ok(service.deleteEmployeeByName(name)+ " No. of row deleted");
+    }
+
+    @GetMapping("/employeesByDep/{department}")
+    public ResponseEntity<?> byDepartment(@PathVariable String department){
+        //return ResponseEntity.ok(repository.findByDepartmentName(department));
+        return ResponseEntity.ok(repository.getEmployeeByDeptName(department));
     }
 }
