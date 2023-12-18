@@ -18,7 +18,7 @@ public class Section {
 
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private List<Employee> employees;
+//    @ManyToOne
+//    @JoinColumn(name = "employee_id")
+//    private List<Employee> employees;
 }
