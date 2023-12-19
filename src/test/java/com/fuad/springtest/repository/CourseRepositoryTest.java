@@ -1,6 +1,7 @@
 package com.fuad.springtest.repository;
 
 import com.fuad.springtest.model.Course;
+import com.fuad.springtest.model.Student;
 import com.fuad.springtest.model.Teacher;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +90,31 @@ class CourseRepositoryTest {
         List<Course> courses = repository.findByTitleContaining("D", firstPageTenRecords).getContent();
 
         System.out.println("courses = " + courses);
+    }
+
+    @Test
+    public void saveCourseWithStudentAndTeacher(){
+        Teacher teacher = Teacher.builder()
+                .firstName("Mahadi")
+                .lastName("Hasan")
+                .build();
+
+        Course course = Course.builder()
+                .title("AI")
+                .credit(12)
+                .teacher(teacher)
+                .build();
+
+        Student student = Student.builder()
+                .firstName("Ali")
+                .lastName("hasan")
+                .emailId("ali@inflack.com")
+                .guardianName("ali baba")
+                .guardianMobile("01675944076")
+                .guardianEmail("ali_baba@gmail.com")
+                .build();
+        course.addStudents(student);
+
+        repository.save(course);
     }
 }
