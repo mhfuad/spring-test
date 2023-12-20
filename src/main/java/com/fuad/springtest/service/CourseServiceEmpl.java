@@ -1,12 +1,16 @@
 package com.fuad.springtest.service;
 
 import com.fuad.springtest.model.Course;
+import com.fuad.springtest.model.Student;
 import com.fuad.springtest.model.Teacher;
 import com.fuad.springtest.repository.CourseRepository;
+import com.fuad.springtest.repository.StudentRepository;
 import com.fuad.springtest.repository.TeacherRepository;
 import com.fuad.springtest.request.CourseRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 public class CourseServiceEmpl implements CourseService{
@@ -15,6 +19,9 @@ public class CourseServiceEmpl implements CourseService{
     private CourseRepository repository;
     @Autowired
     private TeacherRepository teacherRepository;
+    @Autowired
+    private StudentRepository studentRepository;
+
     @Override
     public Course saveCourse(CourseRequest request) {
         if (request.getTeacher() == null && request.getStudents() == null){
@@ -31,8 +38,8 @@ public class CourseServiceEmpl implements CourseService{
                     .teacher(teacher)
                     .build();
             return repository.save(course);
-            //return null;
         }else{
+            //studentRepository.findByIdIn(Collection<Integer> request.getStudents())
             return null;
         }
     }
